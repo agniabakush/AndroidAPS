@@ -1073,10 +1073,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (extendedBolus.source == Source.NIGHTSCOUT) {
                 old = getDaoExtendedBolus().queryForId(extendedBolus.date);
                 if (old != null) {
-                    if (old.source == Source.PUMP) {
-                        log.error("EXTENDEDBOLUS: Pump history record found for pumpId: " + old.pumpId);
-                        return false;  // do not change a pump history record
-                    }
                     if (!old.isEqual(extendedBolus)) {
                         long oldDate = old.date;
                         getDaoExtendedBolus().delete(old); // need to delete/create because date may change too
@@ -1100,10 +1096,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     List<ExtendedBolus> trList = getDaoExtendedBolus().query(preparedQuery);
                     if (trList.size() > 0) {
                         old = trList.get(0);
-                        if (old.source == Source.PUMP) {
-                            log.error("EXTENDEDBOLUS: Pump history record found for pumpId: " + old.pumpId);
-                            return false;  // do not change a pump history record
-                        }
                         if (!old.isEqual(extendedBolus)) {
                             long oldDate = old.date;
                             getDaoExtendedBolus().delete(old); // need to delete/create because date may change too
