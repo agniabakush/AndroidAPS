@@ -28,3 +28,5 @@ Metro contributes `BoostPortInspectionPlugin` in the GENERAL plugin bucket at or
 The source Boost plugin's 2026 Android/Hilt APIs, legacy preference tables, profile and GlucoseStatus types, Nightscout and Health Connect integration, and active dosing path are **not yet ported** to dev's Metro/KMP/Compose APIs. These require explicit data-mapping decisions and dose-safety replays. Dmitry's Autosens/ISF upstream correction must be preserved without a second division, as requested.
 
 The `BoostPortMigrationTest` smoke tests check the default-off flag and pure guard invariants. They do not establish dosing safety, a working pump path or complete V6 parity. Build and test status must be checked in GitHub Actions.
+
+The four unchanged Boost model and metadata JSON blobs were also packaged into `app/src/main/assets/boost/` from the SHA-verified legacy snapshot. Packaging files does **not** load them, enable ML decisions, or alter the default APS engine. The risk model and meal model runtime loaders and all related safety tests still need a target-API migration before activation.
