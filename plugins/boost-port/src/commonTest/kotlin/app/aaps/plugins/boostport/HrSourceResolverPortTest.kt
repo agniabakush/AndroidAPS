@@ -54,7 +54,7 @@ class HrSourceResolverPortTest {
         assertFalse(edge.raiseNotification)
         assertTrue(tracker.onCycle(dark, now + 76 * 60_000L, 12).raiseNotification)
         assertFalse(tracker.onCycle(dark, now + 77 * 60_000L, 12).raiseNotification)
-        tracker.onCycle(fresh, now + 78 * 60_000L, 12)
+        tracker.onCycle(HrSourceResolver.resolve(listOf(HrSourceResolver.Reading("Garmin", now + 78 * 60_000L)), now + 78 * 60_000L), now + 78 * 60_000L, 12)
         assertNotNull(tracker.onCycle(dark, now + 79 * 60_000L, 12).wentDarkNote)
     }
 }
