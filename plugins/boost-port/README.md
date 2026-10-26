@@ -30,3 +30,12 @@ The source Boost plugin's 2026 Android/Hilt APIs, legacy preference tables, prof
 The `BoostPortMigrationTest` smoke tests check the default-off flag and pure guard invariants. They do not establish dosing safety, a working pump path or complete V6 parity. Build and test status must be checked in GitHub Actions.
 
 The four unchanged Boost model and metadata JSON blobs were also packaged into `app/src/main/assets/boost/` from the SHA-verified legacy snapshot. Packaging files does **not** load them, enable ML decisions, or alter the default APS engine. The risk model and meal model runtime loaders and all related safety tests still need a target-API migration before activation.
+
+
+## TDD and V6 transition policy port (2026-10-26)
+
+The source-matched `BoostTddSettingTransition.kt` is now compiled in `src/commonMain` with `BoostTddTransitionPortTest` in `src/commonTest`. This adapts the pure TDD-off, V1-to-V6, and first-enable policy to the new Kotlin Multiplatform module without modifying the active APS plugin or its user preferences. The existing namespaced `BoostPortKey.AuditRequested` is still OFF by default, and `BoostPortInspectionPlugin` remains registered in Metro as GENERAL / forcibly disabled, **not** APS. No new dosing preferences have been surfaced or activated in Nightscout.
+
+The production adapter is not yet integrated: the old plugin is Android/Hilt-specific while Nightscout dev is KMP/Metro. Connecting `DetermineBasalBoost` or `DetermineBasalBoostV5` into live insulin control would require mapping the current shared APS objects and handling source `OapsProfileBoost`, Nightscout history backfill, Health Connect, plugin lifecycle, Compose settings and extensive dose-safety regressions. The legacy snapshot remains isolated to avoid shadowing live classes. Preserve the early Dmitry Autosens/ISF application; do not apply a second static-ratio correction.
+
+**Status: compatibility port in progress; not a functioning/verified Boost APS option.**
