@@ -57,4 +57,26 @@ class HrSourceResolverPortTest {
         tracker.onCycle(HrSourceResolver.resolve(listOf(HrSourceResolver.Reading("Garmin", now + 78 * 60_000L)), now + 78 * 60_000L), now + 78 * 60_000L, 12)
         assertNotNull(tracker.onCycle(dark, now + 79 * 60_000L, 12).wentDarkNote)
     }
+
+    @Test fun exactFreshnessBoundaryIsFresh() {
+        val atBoundary = HrSourceResolver.resolve(
+            listOf(HrSourceResolver.Reading("Garmin", now - HrSourceResolver.FRESH_MS)), now
+        )
+        assertTrue(atBoundary.anyFresh)
+        val justOutside = HrSourceResolver.resolve(
+            listOf(HrSourceResolver.Reading("Garmin", now - HrSourceResolver.FRESH_MS - 1L)), now
+        )
+        assertFalse(justOutside.anyFresh)
+    }
+
+    @Test fun darkFeedNotificationDoesNotFireDuringNight() {
+        val tracker = HrFeedDarkTracker(notifyAfterMin = 60)
+        val alive = HrSourceResolver.resolve(listOf(HrSourceResolver.Reading("Garmin", now)), now)
+        val stale = HrSourceResolver.resolve(listOf(HrSourceResolver.Reading("Garmin", now - 20 * 60_000L)), now)
+        tracker.onCycle(alive, now, 23)
+        tracker.onCycle(stale, now + 20 * 60_000L, 23)
+        assertFalse(tracker.onCycle(stale, now + 100 * 60_000L, 2).raiseNotification)
+        assertTrue(tracker.onCycle(stale, now + 101 * 60_000L, 9).raiseNotification)
+        assertFalse(tracker.onCycle(stale, now + 102 * 60_000L, 9).raiseNotification)
+    }
 }
