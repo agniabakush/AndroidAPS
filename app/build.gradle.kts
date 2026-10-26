@@ -233,6 +233,8 @@ dependencies {
     // graph built here still sees every plugin that self-registers into the plugin map.
     implementation(project(":appshell"))
     implementation(project(":implementation"))
+    // Isolated Boost V6 integration layer: no active APS dosing plugin.
+    implementation(project(":plugins:boost-port"))
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))
     implementation(project(":pump:virtual"))
