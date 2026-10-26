@@ -13,7 +13,7 @@ package app.aaps.plugins.aps.openAPSBoost
  *
  * This model makes "no data" explicit: the step feed is AVAILABLE when the phone pedometer has
  * reported at least once this boot ([StepService.feedState] == LIVE) OR the AAPS Wear watch has
- * written an SC row within [WearStepSource.FRESH_MS]. When unavailable, the caller
+ * written an SC row within [WEAR_FRESH_MS]. When unavailable, the caller
  * (calculateBoostActivity) must:
  *  (a) skip the INACTIVE branch (stay at 100%, activityState = "steps-unknown"),
  *  (b) skip the steps-based sleep-in backstop (the night window + HR sleep detection still
@@ -25,6 +25,9 @@ package app.aaps.plugins.aps.openAPSBoost
  * Pure / no I/O — unit-testable without the plugin.
  */
 internal object StepFeed {
+    /** Identical 12-minute freshness bound to the legacy WearStepSource; kept independent
+     * of SC persistence so the migration's pure feed-state logic builds in commonMain. */
+    const val WEAR_FRESH_MS = 12 * 60_000L
 
     /**
      * Snapshot of the two live-capable step feeds this cycle.
