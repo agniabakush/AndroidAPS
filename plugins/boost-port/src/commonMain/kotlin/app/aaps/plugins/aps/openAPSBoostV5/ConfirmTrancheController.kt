@@ -3,6 +3,7 @@ package app.aaps.plugins.aps.openAPSBoostV5
 import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToLong
 
 /**
  * Splits the confirm commitment in two: part now, the rest ten minutes later if the rise continues.
@@ -162,7 +163,7 @@ class ConfirmTrancheController(
         else Release(granted, "")
     }
 
-    private fun roundMilli(x: Double): Double = Math.round(x * 1000.0) / 1000.0
+    private fun roundMilli(x: Double): Double = (x * 1000.0).roundToLong() / 1000.0
 
     /** Drops any hold. Used when the engine leaves a meal state entirely. */
     fun reset() {
