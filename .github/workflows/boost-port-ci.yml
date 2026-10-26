@@ -8,7 +8,12 @@ on:
       - '.github/workflows/boost-port-ci.yml'
       - 'plugins/boost-port/**'
       - 'app/build.gradle.kts'
+      - 'app/src/main/assets/boost/**'
       - 'settings.gradle'
+
+concurrency:
+  group: boost-port-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
