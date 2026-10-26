@@ -17,3 +17,14 @@ The destination `nightscout/AndroidAPS dev` fork now uses Kotlin Multiplatform (
 5. Run dose-safety replay and unit and integration tests before any plugin is enabled.
 
 The original `dev` APS engine remains unchanged. This staged source is for engineering review, **not clinical use**.
+
+
+## Kotlin Multiplatform adapter in dev (2026-10-26)
+
+The legacy SHA-verified snapshot remains intact under `legacy/`. An additional, independently compilable module `:plugins:boost-port` is now included from `settings.gradle` and `:app`. It imports the exact source implementations of these *pure* Boost V6/V5 components into `src/commonMain`: NightWindow, StepFeed, MealHypothesis, SafetyGates, ConfirmTrancheController, MealSignalScore, MealActionMultiplier and AggressionBudget. The telemetry-only `Math.round` call in ConfirmTrancheController was converted to Kotlin multiplatform `roundToLong`.
+
+Metro contributes `BoostPortInspectionPlugin` in the GENERAL plugin bucket at order key 235. It is deliberately **hidden and forcibly disabled**, is not an APS, never calls the pump, and only registers a namespaced `BoostPortKey.AuditRequested` boolean defaulting to `false`. It must **not** be advertised as the finished Boost dosing plugin. The original Nightscout APS selection and all default dosing settings remain unchanged. The new module deliberately does not register an APS implementation or alter `OpenAPSSMBPlugin` / `DetermineBasalSMB`.
+
+The source Boost plugin's 2026 Android/Hilt APIs, legacy preference tables, profile and GlucoseStatus types, Nightscout and Health Connect integration, and active dosing path are **not yet ported** to dev's Metro/KMP/Compose APIs. These require explicit data-mapping decisions and dose-safety replays. Dmitry's Autosens/ISF upstream correction must be preserved without a second division, as requested.
+
+The `BoostPortMigrationTest` smoke tests check the default-off flag and pure guard invariants. They do not establish dosing safety, a working pump path or complete V6 parity. Build and test status must be checked in GitHub Actions.
